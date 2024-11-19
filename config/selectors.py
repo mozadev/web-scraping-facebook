@@ -1,5 +1,5 @@
 OPLOGIN_SELECTORS = {
-  'email': 'input#login[username]',
+  'user': 'input#login[username]',
   'password': 'input#login[password]',
   'login_button':'btnLoginSubmit',
 }

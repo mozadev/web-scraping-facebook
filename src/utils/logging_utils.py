@@ -1,22 +1,37 @@
+# src/utils/logging_utils.py
+
 import logging
 from datetime import datetime
 import os
-from config.settings import OUTPUT_SETTINGS
 
 def setup_logging():
-  
-    if not os.path.exists(OUTPUT_SETTINGS['logs_folder']):
-        os.makedirs(OUTPUT_SETTINGS['logs_folder'])
+    """Configurar sistema de logging"""
     
-    log_file = f"{OUTPUT_SETTINGS['logs_folder']}/scraping_{datetime.now():%Y%m%d_%H%M%S}.log"
+    # Crear directorio de logs si no existe
+    if not os.path.exists('logs'):
+        os.makedirs('logs')
     
+    # Nombre del archivo de log con timestamp
+    log_filename = f'logs/scraping_{datetime.now():%Y%m%d_%H%M%S}.log'
+    
+    # Configurar logging
     logging.basicConfig(
         level=logging.INFO,
         format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
         handlers=[
-            logging.FileHandler(log_file),
+            # Handler para archivo
+            logging.FileHandler(log_filename),
+            # Handler para consola
             logging.StreamHandler()
         ]
     )
     
-    return logging.getLogger('web_scraper')
+    # Crear y retornar logger
+    logger = logging.getLogger('web_scraper')
+    logger.setLevel(logging.INFO)
+    
+    # Logging inicial
+    logger.info("Sistema de logging iniciado")
+    logger.info(f"Archivo de log: {log_filename}")
+    
+    return logger
