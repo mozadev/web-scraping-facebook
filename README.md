@@ -21,7 +21,7 @@ Un script en Python para automatizar la extracción de datos de Facebook Marketp
 ## 🔧 Instalación
 
 1. Clonar el repositorio:
-```bash
+``` Git bash
 git clone https://github.com/yourusername/facebook-marketplace-scraper.git
 cd facebook-marketplace-scraper
 ```

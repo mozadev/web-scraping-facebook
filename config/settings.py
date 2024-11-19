@@ -8,7 +8,7 @@ BROWSER_SETTINGS = {
     'wait_time': 10,
     'retry_attempts': 3
 }
-OUTPUT_SETTINGS = {
-    'data_folder': 'output/data',
-    'logs_folder': 'output/logs'
-}
+# OUTPUT_SETTINGS = {
+#     'data_folder': 'output/data',
+#     'logs_folder': 'output/logs'
+# }

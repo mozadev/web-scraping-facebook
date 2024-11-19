@@ -5,10 +5,18 @@ OPLOGIN_SELECTORS = {
 }
 
 
-
-
-
-
+FB_SELECTORS = {
+    'email': 'input#email',
+    'password': 'input#pass',
+    'login_button': 'button[name="login"]',
+    'marketplace': '//span[contains(text(), "Marketplace")]',
+    'search_box': '//input[@placeholder="Search Marketplace"]',
+    'search_button': '//div[@aria-label="Search Marketplace"]',
+    'product_items': '//div[@data-testid="marketplace_feed_item"]',
+    'product_title': './/span[contains(@class, "title")]',
+    'product_price': './/span[contains(@class, "price")]',
+    'product_location': './/span[contains(@class, "location")]'
+}
 
 
 

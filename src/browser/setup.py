@@ -8,7 +8,7 @@ def setup_chrome_driver():
     """Setup Chrome driver with window staying open"""
     options = Options()
     
-    # Configuraciones básicas
+
     options.add_argument("--start-maximized")
     options.add_argument("--disable-notifications")
 

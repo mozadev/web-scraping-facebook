@@ -90,7 +90,7 @@ def scrape_facebook_marketplace(driver, search_terms, email, password):
     """Main function to handle all Facebook Marketplace scraping"""
     logger = logging.getLogger('facebook_scraper')
     all_results = []
-    
+
     try:
         # Login once at the beginning
         if not login_to_facebook(driver, email, password):
