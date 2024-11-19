@@ -1,46 +1,33 @@
 from src.browser.setup import setup_chrome_driver
-from src.scrapers.facebook_scraper import scrape_facebook_marketplace
+from src.scrapers.oplogin_scraper import login_to_oplogin
 from src.utils.logging_utils import setup_logging
 from dotenv import load_dotenv
 import os
 
 def main():
-    # Setup
+   
     load_dotenv()
     logger = setup_logging()
     driver = None
     
-    # Get credentials
-    email = os.getenv('FACEBOOK_EMAIL')
-    password = os.getenv('FACEBOOK_PASSWORD')
+  
+    user = os.getenv('OPLOGIN_USER')
+    password = os.getenv('OPLOGIN_PASSWORD')
     
-    if not email or not password:
-        logger.error("Facebook credentials not found in .env file")
+    if not user or not password:
+        logger.error(" Credenciales de Oplogin no fueron encontradas .env file")
         return
     
     try:
-        logger.info("Starting Facebook scraping process")
+        logger.info("Empezando Oplogin scraping process")
         driver = setup_chrome_driver()
         
-        # Define search terms - cada término por separado
-        search_terms = [
-            "laptop",         # Buscar laptops
-            "smartphone",     # Luego smartphones
-            "headphones"      # Finalmente headphones
-        ]
+        login_to_oplogin(driver,user,password)
         
-        # Ejecutar la búsqueda
-        results = scrape_facebook_marketplace(
-            driver,
-            search_terms,
-            email,
-            password
-        )
-        
-        logger.info(f"Total products found: {len(results)}")
+       
         
     except Exception as e:
-        logger.error(f"Error in main process: {str(e)}")
+        logger.error(f"No se pudo logear {str(e)}")
         
     finally:
         if driver:

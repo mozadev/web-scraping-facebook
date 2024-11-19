@@ -4,7 +4,7 @@ import os
 from config.settings import OUTPUT_SETTINGS
 
 def setup_logging():
-    """Set up logging configuration"""
+  
     if not os.path.exists(OUTPUT_SETTINGS['logs_folder']):
         os.makedirs(OUTPUT_SETTINGS['logs_folder'])
     

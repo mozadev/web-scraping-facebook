@@ -1,5 +1,5 @@
 BROWSER_SETTINGS = {
-    'timeout': 10,
+    'timeout': 30,
     'headless': False,
     'page_load_timeout': 30
 }
