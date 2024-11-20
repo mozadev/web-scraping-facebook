@@ -6,9 +6,9 @@ from ..utils.input_utils import random_delay
 from config.selectors import OPLOGIN_SELECTORS
 import logging
 import time
+from datetime import datetime, timedelta
 
 def login_to_oplogin(driver, user, password):
-
     logger = logging.getLogger('oplogin_scraper')
     
     try:
@@ -51,7 +51,6 @@ def scrape_oplogin_term(driver, search_term):
     return results
 
 def select_severity_down(driver):
-   
     logger = logging.getLogger('severity_selector')
     
     try:
@@ -107,7 +106,6 @@ def select_severity_down(driver):
 
 def select_custom_date_range(driver):
     logger = logging.getLogger('date_selector')
-    
     try:
        
         date_input = WebDriverWait(driver, 10).until(
@@ -136,6 +134,44 @@ def select_custom_date_range(driver):
         logger.error(f"Error seleccionando Custom Range: {str(e)}")
         return False
 
+def select_dynamic_date_range(driver):
+    try:
+       
+        today = datetime.now()
+        week_ago = today - timedelta(days=7)
+        
+   
+        date_input = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, "input[name='date_range']"))
+        )
+        date_input.click()
+        
+      
+        custom_range = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//li[@data-range-key='Custom Range']"))
+        )
+        custom_range.click()
+        
+        
+        start_date_input = driver.find_element(By.NAME, "daterangepicker_start")
+        start_date_input.clear()
+        start_date_input.send_keys(week_ago.strftime("%m/%d/%Y"))
+        
+       
+        end_date_input = driver.find_element(By.NAME, "daterangepicker_end")
+        end_date_input.clear()
+        end_date_input.send_keys(today.strftime("%m/%d/%Y"))
+        
+      
+        apply_button = driver.find_element(By.CLASS_NAME, "applyBtn")
+        apply_button.click()
+        
+        return True
+        
+    except Exception as e:
+        logging.error(f"Error estableciendo el rango de fechas: {str(e)}")
+        return False
+
 def scrape_oplogin_page(driver, user, password):
     logger= logging.getLogger('Oplogin_scrapper')
     all_results = []
@@ -150,11 +186,16 @@ def scrape_oplogin_page(driver, user, password):
         else:
             logger.error("No se pudo configurar el filtro de severidad")
 
-        
         if select_custom_date_range(driver):
-            logger.info("Range de datos seleccionado correctamente")
+            logger.info("Calendario Rango de fechas seleccionado correctamente")
         else:
-            logger.error(" No se pudo seleccionar rango de fechas")
+            logger.error(" No se pudo seleccionar  Calendario rango de fechas")
+
+        if select_dynamic_date_range(driver):
+            logger.info("Rango de fechas inicio y fin aplicado correctamente")
+        else:
+            logger.info("No se pudo aplicar el rango de fechas")
+    
         return all_results
     
     except Exception as e :
