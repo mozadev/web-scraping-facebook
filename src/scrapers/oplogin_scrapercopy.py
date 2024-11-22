@@ -50,29 +50,24 @@ def scrape_oplogin_term(driver, search_term):
 
     return results
 
-def select_severity_down(driver):
-    logger = logging.getLogger('severity_selector')
+def select_opcionSeverity_down(driver):
     
+    logging.info('Seleccionando opcion Severity')
     try:
-       
         WebDriverWait(driver, 10).until(
             EC.presence_of_element_located((By.CSS_SELECTOR, "div.panel-body"))
         )
-        
-        
         selectors = {
             'button': "button.multiselect.dropdown-toggle",
             'dropdown': "div.btn-group button[data-toggle='dropdown']",
             'option': "//li//label[normalize-space()='INTERMIT']"
         }
-        
-        
         try:
             dropdown = WebDriverWait(driver, 10).until(
                 EC.element_to_be_clickable((By.CSS_SELECTOR, selectors['button']))
             )
             dropdown.click()
-            logger.info("Dropdown abierto")
+            logging.info("Dropdown abierto")
             
            
             time.sleep(0.5)
@@ -82,29 +77,30 @@ def select_severity_down(driver):
                 EC.element_to_be_clickable((By.XPATH, selectors['option']))
             )
             down_option.click()
-            logger.info("Opción DOWN seleccionada")
+            logging.info("Opción DOWN seleccionada")
             
           
             selected_text = dropdown.text.strip()
             if "DOWN" in selected_text:
-                logger.info("Verificación exitosa: DOWN está seleccionado")
+                logging.info("Verificación exitosa: DOWN está seleccionado")
                 dropdown.click()
-                logger.info("Cerrando lista Drop DOWN ")
+                logging.info("Cerrando lista Drop DOWN ")
                 
                 return True
             else:
-                logger.warning("Verificación falló: DOWN no aparece seleccionado")
+                logging.warning("Verificación falló: DOWN no aparece seleccionado")
+                
                 return False
                 
         except Exception as e:
-            logger.error(f"Error seleccionando DOWN: {str(e)}")
+            logging.error(f"Error seleccionando DOWN: {str(e)}")
             return False
             
     except Exception as e:
-        logger.error(f"Error general: {str(e)}")
+        logging.error(f"Error general: {str(e)}")
         return False
 
-def select_custom_date_range(driver):
+def selec_calendario_lastUpdate(driver):
     logger = logging.getLogger('date_selector')
     try:
        
@@ -134,9 +130,8 @@ def select_custom_date_range(driver):
         logger.error(f"Error seleccionando Custom Range: {str(e)}")
         return False
 
-def select_dynamic_date_range(driver):
+def set_fechInicio_fechaFin(driver):
     try:
-       
         today = datetime.now()
         week_ago = today - timedelta(days=7)
         
@@ -172,6 +167,28 @@ def select_dynamic_date_range(driver):
         logging.error(f"Error estableciendo el rango de fechas: {str(e)}")
         return False
 
+def click_boton_dropdown(driver):
+    try:
+        logging.info("Tratando clickear en boton lista desplegable")
+        dropdown_toggle = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CSS_SELECTOR, 
+                "button.btn.btn-primary.dropdown-toggle[data-toggle='dropdown']"))
+        )
+        dropdown_toggle.click()
+    except Exception as e:
+        raise(f"Error en click sobre boton lista desplegable: {str(e)}")
+    
+def click_btn_ExportExcel(driver):
+    try:
+        logging.info("Intentando click en boton Exportar a excel")
+        export_option = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.ID, "btnExport"))
+        )
+        export_option.click()
+        return True
+    except Exception as e:
+        logging.error(f"Error dando click en boton Exportar a excel: {str(e)}")
+    
 def scrape_oplogin_page(driver, user, password):
     logger= logging.getLogger('Oplogin_scrapper')
     all_results = []
@@ -181,28 +198,19 @@ def scrape_oplogin_page(driver, user, password):
             logger.error("Falló login a Oplogin ")
             return all_results
         
-        if select_severity_down(driver):
-            logger.info("Filtro de severidad configurado correctamente")
-        else:
-            logger.error("No se pudo configurar el filtro de severidad")
-
-        if select_custom_date_range(driver):
-            logger.info("Calendario Rango de fechas seleccionado correctamente")
-        else:
-            logger.error(" No se pudo seleccionar  Calendario rango de fechas")
-
-        if select_dynamic_date_range(driver):
-            logger.info("Rango de fechas inicio y fin aplicado correctamente")
-        else:
-            logger.info("No se pudo aplicar el rango de fechas")
-    
+        select_opcionSeverity_down(driver)
+        selec_calendario_lastUpdate(driver)
+        set_fechInicio_fechaFin(driver)
+        click_boton_dropdown(driver)
+        click_btn_ExportExcel(driver)
+            
         return all_results
     
     except Exception as e :
         logger.error(f"Error in Oplogin scraping: {str(e)}")
         return all_results
     
-    
+
 
 
 
